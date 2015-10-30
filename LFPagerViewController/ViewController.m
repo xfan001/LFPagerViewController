@@ -47,7 +47,7 @@
 
 - (NSInteger)numberOfViewControllers
 {
-    return 2;
+    return 100;
 }
 
 @end

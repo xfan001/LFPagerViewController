@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CEB525C01BDB2CC800D75D7B /* LFPagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB525BF1BDB2CC800D75D7B /* LFPagerViewController.m */; };
+		CEB0EA1A1BE3BE5B007FEAE8 /* LFBarScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB0EA171BE3BE5B007FEAE8 /* LFBarScrollView.m */; };
+		CEB0EA1B1BE3BE5B007FEAE8 /* LFPagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB0EA191BE3BE5B007FEAE8 /* LFPagerViewController.m */; };
 		CEDB48571BD9FB3000081E2F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB48561BD9FB3000081E2F /* main.m */; };
 		CEDB485A1BD9FB3000081E2F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB48591BD9FB3000081E2F /* AppDelegate.m */; };
 		CEDB485D1BD9FB3000081E2F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB485C1BD9FB3000081E2F /* ViewController.m */; };
@@ -16,7 +17,6 @@
 		CEDB48651BD9FB3000081E2F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDB48631BD9FB3000081E2F /* LaunchScreen.storyboard */; };
 		CEDB48701BD9FB3000081E2F /* LFPagerViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB486F1BD9FB3000081E2F /* LFPagerViewControllerTests.m */; };
 		CEDB487B1BD9FB3000081E2F /* LFPagerViewControllerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB487A1BD9FB3000081E2F /* LFPagerViewControllerUITests.m */; };
-		CEDB488B1BD9FBF300081E2F /* LFBarScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB488A1BD9FBF300081E2F /* LFBarScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +37,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CEB525BE1BDB2CC800D75D7B /* LFPagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFPagerViewController.h; sourceTree = "<group>"; };
-		CEB525BF1BDB2CC800D75D7B /* LFPagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFPagerViewController.m; sourceTree = "<group>"; };
+		CEB0EA161BE3BE5B007FEAE8 /* LFBarScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFBarScrollView.h; path = Class/LFBarScrollView.h; sourceTree = "<group>"; };
+		CEB0EA171BE3BE5B007FEAE8 /* LFBarScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LFBarScrollView.m; path = Class/LFBarScrollView.m; sourceTree = "<group>"; };
+		CEB0EA181BE3BE5B007FEAE8 /* LFPagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFPagerViewController.h; path = Class/LFPagerViewController.h; sourceTree = "<group>"; };
+		CEB0EA191BE3BE5B007FEAE8 /* LFPagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LFPagerViewController.m; path = Class/LFPagerViewController.m; sourceTree = "<group>"; };
 		CEDB48521BD9FB3000081E2F /* LFPagerViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LFPagerViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDB48561BD9FB3000081E2F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CEDB48581BD9FB3000081E2F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,8 +57,6 @@
 		CEDB48761BD9FB3000081E2F /* LFPagerViewControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LFPagerViewControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDB487A1BD9FB3000081E2F /* LFPagerViewControllerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFPagerViewControllerUITests.m; sourceTree = "<group>"; };
 		CEDB487C1BD9FB3000081E2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CEDB48891BD9FBF300081E2F /* LFBarScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFBarScrollView.h; sourceTree = "<group>"; };
-		CEDB488A1BD9FBF300081E2F /* LFBarScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBarScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,10 +150,10 @@
 		CEDB48881BD9FB5800081E2F /* Base Class */ = {
 			isa = PBXGroup;
 			children = (
-				CEDB48891BD9FBF300081E2F /* LFBarScrollView.h */,
-				CEDB488A1BD9FBF300081E2F /* LFBarScrollView.m */,
-				CEB525BE1BDB2CC800D75D7B /* LFPagerViewController.h */,
-				CEB525BF1BDB2CC800D75D7B /* LFPagerViewController.m */,
+				CEB0EA161BE3BE5B007FEAE8 /* LFBarScrollView.h */,
+				CEB0EA171BE3BE5B007FEAE8 /* LFBarScrollView.m */,
+				CEB0EA181BE3BE5B007FEAE8 /* LFPagerViewController.h */,
+				CEB0EA191BE3BE5B007FEAE8 /* LFPagerViewController.m */,
 			);
 			name = "Base Class";
 			sourceTree = "<group>";
@@ -288,9 +288,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEB525C01BDB2CC800D75D7B /* LFPagerViewController.m in Sources */,
+				CEB0EA1B1BE3BE5B007FEAE8 /* LFPagerViewController.m in Sources */,
 				CEDB485D1BD9FB3000081E2F /* ViewController.m in Sources */,
-				CEDB488B1BD9FBF300081E2F /* LFBarScrollView.m in Sources */,
+				CEB0EA1A1BE3BE5B007FEAE8 /* LFBarScrollView.m in Sources */,
 				CEDB485A1BD9FB3000081E2F /* AppDelegate.m in Sources */,
 				CEDB48571BD9FB3000081E2F /* main.m in Sources */,
 			);
