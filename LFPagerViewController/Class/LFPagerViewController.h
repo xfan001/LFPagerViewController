@@ -18,6 +18,9 @@
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index;
 
+@optional
+- (CGFloat)barHeight;
+
 @end
 
 @interface LFPagerViewController : UIViewController
@@ -25,5 +28,7 @@
 @property (nonatomic, strong) LFBarScrollView *barView;
 
 @property (nonatomic, weak) id <LFPagerViewControllerDataSource> datasource;
+
+@property (assign, nonatomic) NSInteger selectedIndex;
 
 @end

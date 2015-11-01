@@ -15,21 +15,32 @@
 
 @implementation ViewController
 
-- (instancetype)init{
-    if (self  =[super init]) {
-        
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     self.datasource = self;
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self.barView setWidthArray:@[[NSNumber numberWithFloat:mainScreenWidth/2], [NSNumber numberWithFloat:mainScreenWidth/2]]];
+    NSMutableArray *widthArray = [NSMutableArray new];
+    for (int i=0; i<[self numberOfViewControllers]; i++) {
+        [widthArray addObject:[NSNumber numberWithFloat:mainScreenWidth/([self numberOfViewControllers])]];
+    }
+    [self.barView setWidthArray:widthArray];
+    
+}
+
+
+
+
+- (NSInteger)numberOfViewControllers
+{
+    return 5;
+}
+
+- (CGFloat)barHeight{
+    return 50;
 }
 
 - (NSString *)titleAtIndex:(NSInteger)index
@@ -45,9 +56,5 @@
     return vc;
 }
 
-- (NSInteger)numberOfViewControllers
-{
-    return 100;
-}
 
 @end

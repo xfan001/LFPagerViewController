@@ -17,8 +17,6 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 
-@property (assign, nonatomic) NSInteger selectedIndex;
-
 
 @end
 
@@ -26,14 +24,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _selectedIndex = 0;
-    
+        
     NSMutableArray *titleArray = [[NSMutableArray alloc] init];
     for (int i=0; i<[self.datasource numberOfViewControllers];i++) {
         [titleArray addObject:[self.datasource titleAtIndex:i]];
     }
-    self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, 40) titles:titleArray andSelected:_selectedIndex];
+    self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, [self barViewHeight]) titles:titleArray andSelected:_selectedIndex];
     self.barView.barDelegate = self;
     [self.view addSubview:self.barView];
     
@@ -92,6 +88,7 @@
     }
 }
 
+#pragma mark - private methods
 
 - (void)didClickBarAtIndex:(NSInteger)index
 {
@@ -109,8 +106,15 @@
     return vc;
 }
 
+- (CGFloat)barViewHeight
+{
+    if (self.datasource && [self.datasource respondsToSelector:@selector(barHeight)]) {
+        return [self.datasource barHeight];
+    }
+    return 44.0f;
+}
 
-
+#pragma mark - getter and setter
 
 
 @end

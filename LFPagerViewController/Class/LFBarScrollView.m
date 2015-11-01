@@ -27,12 +27,11 @@
 
 @implementation LFBarScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray widthArray:(NSArray *)widthArray andSelected:(NSInteger)selected
+- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray andSelected:(NSInteger)selected
 {
     if (self = [super initWithFrame:frame]) {
         
         _titleArray = titleArray;
-        _widthArray = widthArray;
         _selectedIndex = selected;
         
         _titleFont = [UIFont systemFontOfSize:14];
@@ -67,14 +66,10 @@
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray andSelected:(NSInteger)selected
-{
-    return [[LFBarScrollView alloc] initWithFrame:frame titles:titleArray widthArray:nil andSelected:selected];
-}
-
-
 - (void)relodViews
 {
+    self.backgroundColor = self.barBackgroundColor;
+    
     BOOL isWidthSet;
     if (!self.widthArray || (self.widthArray.count != self.titleArray.count)) {
         isWidthSet = NO;
@@ -102,7 +97,11 @@
     
     self.contentSize = CGSizeMake(x, self.bounds.size.height);
     
+    CGRect slideFrame = self.slideView.frame;
+    slideFrame.size.height = self.slideHeight;
+    self.slideView.frame = slideFrame;
     self.slideView.backgroundColor = self.slideColor;
+    self.slideView.layer.cornerRadius = 1.0f;
     [self setSelectedIndex:_selectedIndex];
 }
 
