@@ -111,7 +111,7 @@
     if (self.datasource && [self.datasource respondsToSelector:@selector(barHeight)]) {
         return [self.datasource barHeight];
     }
-    return 44.0f;
+    return 36.0f;
 }
 
 #pragma mark - getter and setter

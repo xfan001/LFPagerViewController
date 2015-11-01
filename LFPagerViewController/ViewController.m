@@ -40,7 +40,7 @@
 }
 
 - (CGFloat)barHeight{
-    return 50;
+    return 36;
 }
 
 - (NSString *)titleAtIndex:(NSInteger)index
