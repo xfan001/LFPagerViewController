@@ -2,7 +2,6 @@
 //  LFBarScrollView.m
 //  LFPagerViewController
 //
-//  Created by 黎帆 on 15/10/23.
 //  Copyright © 2015年 lifan. All rights reserved.
 //
 
@@ -16,7 +15,7 @@
 @interface LFBarScrollView ()
 
 @property (nonatomic, strong) NSArray *titleArray;
-@property (nonatomic, strong) NSArray *widthArray;
+@property (nonatomic, copy) NSMutableArray *widthArray;
 @property (nonatomic, strong) NSArray *labelArray;
 
 @property (nonatomic, strong) UIView *slideView;
@@ -27,12 +26,9 @@
 
 @implementation LFBarScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray andSelected:(NSInteger)selected
+- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray
 {
     if (self = [super initWithFrame:frame]) {
-        
-        _titleArray = titleArray;
-        _selectedIndex = selected;
         
         _titleFont = [UIFont systemFontOfSize:14];
         _barBackgroundColor = [UIColor whiteColor];
@@ -41,67 +37,61 @@
         _slideColor = [UIColor redColor];
         _slideHeight = 2;
         
-        self.showsHorizontalScrollIndicator = NO;
-        self.showsVerticalScrollIndicator = NO;
-        self.bounces = NO;
+        _titleArray = titleArray;
     
-        NSMutableArray *mutableArray = [NSMutableArray new];
+        NSMutableArray *labelMutableArray = [NSMutableArray new];
+        NSMutableArray *widthMutableArray = [NSMutableArray new];
         for (int i=0; i<self.titleArray.count; i++) {
             UILabel *label = [[UILabel alloc] init];
             label.text = self.titleArray[i];
+            CGFloat width = [[_titleArray objectAtIndex:i] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 30;
+            [widthMutableArray addObject:[NSNumber numberWithFloat:width]];
+            
             label.tag = i;
             label.userInteractionEnabled = YES;
             [label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)]];
             [self addSubview:label];
             
-            [mutableArray addObject:label];
+            [labelMutableArray addObject:label];
         }
-        _labelArray = mutableArray;
+        _labelArray = labelMutableArray;
+        _widthArray = widthMutableArray;
         
         self.slideView = [[UIView alloc] init];
         [self addSubview:self.slideView];
         
-        [self relodViews];
+        self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
+        self.bounces = NO;
     }
     return self;
 }
 
-- (void)relodViews
+- (void)layoutSubviews
 {
     self.backgroundColor = self.barBackgroundColor;
-    
-    BOOL isWidthSet;
-    if (!self.widthArray || (self.widthArray.count != self.titleArray.count)) {
-        isWidthSet = NO;
-    }else{
-        isWidthSet = YES;
-    }
     
     CGFloat x = 0;
     for (int i=0; i<self.titleArray.count; i++){
         UILabel *label = [self.labelArray objectAtIndex:i];
-        CGFloat width;
-        if (isWidthSet) {
-            width = [self.widthArray[i] doubleValue];
-        }else{
-            width = [self.titleArray[i] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 30;
-        }
-        label.frame = CGRectMake(x, 0, width, self.bounds.size.height);
-        x += width;
-        
         label.textAlignment = NSTextAlignmentCenter;
         label.font = self.titleFont;
         label.textColor = self.titleNormalColor;
         label.backgroundColor = self.backgroundColor;
+        
+        CGFloat width = [self.widthArray[i] doubleValue];
+        label.frame = CGRectMake(x, 0, width, self.bounds.size.height);
+        x += width;
     }
     
     self.contentSize = CGSizeMake(x, self.bounds.size.height);
     
-    CGRect slideFrame = self.slideView.frame;
-    slideFrame.size.height = self.slideHeight;
-    self.slideView.frame = slideFrame;
+    self.slideView.frame = ({
+        CGRect frame = self.slideView.frame;
+        frame.size.height = self.slideHeight;
+        frame;
+    });
     self.slideView.backgroundColor = self.slideColor;
-    self.slideView.layer.cornerRadius = 1.0f;
     [self setSelectedIndex:_selectedIndex];
 }
 
@@ -164,8 +154,9 @@
     _selectedIndex = selectedIndex;
     
     CGRect frame = label.frame;
-    CGFloat textWidth = [self.titleArray[_selectedIndex] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 2;
-    self.slideView.frame = CGRectMake(CGRectGetMidX(frame)-textWidth/2, CGRectGetHeight(self.frame)-self.slideHeight, textWidth, self.slideHeight);
+//    CGFloat width = [self.titleArray[_selectedIndex] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 2;
+    CGFloat width = frame.size.width;
+    self.slideView.frame = CGRectMake(CGRectGetMidX(frame)-width/2, CGRectGetHeight(self.frame)-self.slideHeight, width, self.slideHeight);
     
     //滚动到中间位置
     CGPoint offset = self.contentOffset;
@@ -177,22 +168,12 @@
     self.contentOffset = offset;
 }
 
-- (void)setWidthArray:(NSArray *)widthArray
-{
-    if ([_widthArray isEqualToArray:widthArray]) {
-        return;
-    }
-    _widthArray = widthArray;
-    [self relodViews];
-}
-
 - (void)setTitleFont:(UIFont *)titleFont
 {
     if ([_titleFont isEqual:titleFont]) {
         return;
     }
     _titleFont = titleFont;
-    [self relodViews];
 }
 
 - (void)setTitleNormalColor:(UIColor *)titleNormalColor
@@ -201,7 +182,6 @@
         return;
     }
     _titleNormalColor = titleNormalColor;
-    [self relodViews];
 }
 
 - (void)setTitleSelectedColor:(UIColor *)titleSelectedColor
@@ -210,7 +190,6 @@
         return;
     }
     _titleSelectedColor = titleSelectedColor;
-    [self relodViews];
 }
 
 - (void)setBarBackgroundColor:(UIColor *)barBackgroundColor
@@ -219,7 +198,6 @@
         return;
     }
     _barBackgroundColor = barBackgroundColor;
-    [self relodViews];
 }
 
 - (void)setSlideColor:(UIColor *)slideColor
@@ -228,7 +206,6 @@
         return;
     }
     _slideColor = slideColor;
-    [self relodViews];
 }
 
 - (void)setSlideHeight:(CGFloat)slideHeight
@@ -237,7 +214,11 @@
         return;
     }
     _slideHeight = slideHeight;
-    [self relodViews];
+}
+
+- (void)setWidth:(CGFloat)width forIndex:(NSInteger)index
+{
+    [_widthArray setObject:[NSNumber numberWithFloat:width] atIndexedSubscript:index];
 }
 
 @end

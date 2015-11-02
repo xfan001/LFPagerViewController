@@ -2,7 +2,6 @@
 //  LFPagerViewController.m
 //  LFPagerViewController
 //
-//  Created by 黎帆 on 15/10/24.
 //  Copyright © 2015年 lifan. All rights reserved.
 //
 
@@ -29,7 +28,8 @@
     for (int i=0; i<[self.datasource numberOfViewControllers];i++) {
         [titleArray addObject:[self.datasource titleAtIndex:i]];
     }
-    self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, [self barViewHeight]) titles:titleArray andSelected:_selectedIndex];
+    self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, [self barViewHeight]) titles:titleArray];
+    [self.barView setSelectedIndex:_selectedIndex];
     self.barView.barDelegate = self;
     [self.view addSubview:self.barView];
     
@@ -109,7 +109,7 @@
 - (CGFloat)barViewHeight
 {
     if (self.datasource && [self.datasource respondsToSelector:@selector(barHeight)]) {
-        return [self.datasource barHeight];
+        return [self.delegate barHeight];
     }
     return 36.0f;
 }

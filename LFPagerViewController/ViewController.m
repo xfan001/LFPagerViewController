@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #define mainScreenWidth ([UIScreen mainScreen].bounds.size.width)
 
-@interface ViewController () <LFPagerViewControllerDataSource>
+@interface ViewController () <LFPagerViewControllerDataSource, LFPagerViewControllerDelegate>
 
 @end
 
@@ -17,18 +17,17 @@
 
 - (void)viewDidLoad {
     self.datasource = self;
-    
+    self.delegate = self;
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    NSMutableArray *widthArray = [NSMutableArray new];
-    for (int i=0; i<[self numberOfViewControllers]; i++) {
-        [widthArray addObject:[NSNumber numberWithFloat:mainScreenWidth/([self numberOfViewControllers])]];
-    }
-    [self.barView setWidthArray:widthArray];
-    
+
+//    for (int i=0; i<[self numberOfViewControllers]; i++) {
+//        [self.barView setWidth:mainScreenWidth/5 forIndex:i];
+//    }
+    NSLog(@"%@", NSStringFromCGSize(self.barView.contentSize));
 }
 
 
@@ -36,7 +35,7 @@
 
 - (NSInteger)numberOfViewControllers
 {
-    return 5;
+    return 10;
 }
 
 - (CGFloat)barHeight{

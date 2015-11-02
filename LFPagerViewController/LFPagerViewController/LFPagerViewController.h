@@ -2,7 +2,6 @@
 //  LFPagerViewController.h
 //  LFPagerViewController
 //
-//  Created by 黎帆 on 15/10/24.
 //  Copyright © 2015年 lifan. All rights reserved.
 //
 
@@ -18,6 +17,11 @@
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index;
 
+@end
+
+
+@protocol LFPagerViewControllerDelegate <NSObject>
+
 @optional
 - (CGFloat)barHeight;
 
@@ -28,6 +32,7 @@
 @property (nonatomic, strong) LFBarScrollView *barView;
 
 @property (nonatomic, weak) id <LFPagerViewControllerDataSource> datasource;
+@property (nonatomic, weak) id <LFPagerViewControllerDelegate> delegate;
 
 @property (assign, nonatomic) NSInteger selectedIndex;
 
