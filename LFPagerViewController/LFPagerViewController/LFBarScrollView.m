@@ -63,11 +63,13 @@
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.bounces = NO;
+        
+        [self reloadViews];
     }
     return self;
 }
 
-- (void)layoutSubviews
+- (void)reloadViews
 {
     self.backgroundColor = self.barBackgroundColor;
     
@@ -94,7 +96,6 @@
     self.slideView.backgroundColor = self.slideColor;
     [self setSelectedIndex:_selectedIndex];
 }
-
 
 - (void)tapLabel:(id)sender
 {
@@ -174,6 +175,7 @@
         return;
     }
     _titleFont = titleFont;
+    [self reloadViews];
 }
 
 - (void)setTitleNormalColor:(UIColor *)titleNormalColor
@@ -182,6 +184,7 @@
         return;
     }
     _titleNormalColor = titleNormalColor;
+    [self reloadViews];
 }
 
 - (void)setTitleSelectedColor:(UIColor *)titleSelectedColor
@@ -190,6 +193,7 @@
         return;
     }
     _titleSelectedColor = titleSelectedColor;
+    [self reloadViews];
 }
 
 - (void)setBarBackgroundColor:(UIColor *)barBackgroundColor
@@ -198,6 +202,7 @@
         return;
     }
     _barBackgroundColor = barBackgroundColor;
+    [self reloadViews];
 }
 
 - (void)setSlideColor:(UIColor *)slideColor
@@ -206,6 +211,7 @@
         return;
     }
     _slideColor = slideColor;
+    [self reloadViews];
 }
 
 - (void)setSlideHeight:(CGFloat)slideHeight
@@ -214,11 +220,13 @@
         return;
     }
     _slideHeight = slideHeight;
+    [self reloadViews];
 }
 
 - (void)setWidth:(CGFloat)width forIndex:(NSInteger)index
 {
     [_widthArray setObject:[NSNumber numberWithFloat:width] atIndexedSubscript:index];
+    [self reloadViews];
 }
 
 @end

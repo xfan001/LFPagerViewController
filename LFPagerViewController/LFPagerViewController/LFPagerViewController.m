@@ -33,7 +33,6 @@
     self.barView.barDelegate = self;
     [self.view addSubview:self.barView];
     
-    
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.barView.frame), self_width, self_height-CGRectGetHeight(self.barView.frame));
     self.pageViewController.dataSource = self;

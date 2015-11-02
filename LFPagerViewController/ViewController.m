@@ -23,14 +23,17 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
-
-//    for (int i=0; i<[self numberOfViewControllers]; i++) {
-//        [self.barView setWidth:mainScreenWidth/5 forIndex:i];
-//    }
-    NSLog(@"%@", NSStringFromCGSize(self.barView.contentSize));
+    for (int i=0; i<[self numberOfViewControllers]; i++) {
+        [self.barView setWidth:mainScreenWidth/5 forIndex:i];
+    }
 }
 
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    NSLog(@"%@", NSStringFromCGSize(self.barView.contentSize));
+}
 
 
 - (NSInteger)numberOfViewControllers
