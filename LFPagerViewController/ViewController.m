@@ -16,9 +16,9 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.datasource = self;
     self.delegate = self;
-    [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];

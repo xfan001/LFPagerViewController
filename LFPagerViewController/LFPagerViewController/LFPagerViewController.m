@@ -16,14 +16,19 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 
-
 @end
 
 @implementation LFPagerViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-        
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+     
     NSMutableArray *titleArray = [[NSMutableArray alloc] init];
     for (int i=0; i<[self.datasource numberOfViewControllers];i++) {
         [titleArray addObject:[self.datasource titleAtIndex:i]];
@@ -71,7 +76,7 @@
 
 - (void)pageViewController:(UIPageViewController * _Nonnull)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> * _Nonnull)previousViewControllers transitionCompleted:(BOOL)completed
 {
-    
+
 }
 
 #pragma mark - UIscrollView delegate
@@ -85,6 +90,18 @@
             [self.barView setSelectedIndex:_selectedIndex];
         }];
     }
+//    NSInteger page = [objc_getAssociatedObject([self.pageViewController.viewControllers firstObject], UNIQUE_INDEX_KEY) integerValue];
+//    double offsetPercent = scrollView.contentOffset.x / self_width;
+//    if (scrollView.isDragging) {
+//        if (2>offsetPercent > 1.0) {
+//            NSInteger targetIndex = (_selectedIndex>=[self.datasource numberOfViewControllers]-1 ? _selectedIndex : _selectedIndex+1);
+//            [self.barView transitionFromIndex:_selectedIndex toIndex:targetIndex withPercent:offsetPercent-1];
+//        }
+//        if (0<offsetPercent < 1.0) {
+//            NSInteger targetIndex = (_selectedIndex<=0 ? _selectedIndex :_selectedIndex-1);
+//            [self.barView transitionFromIndex:_selectedIndex toIndex:targetIndex withPercent:1-offsetPercent];
+//        }
+//    }
 }
 
 #pragma mark - private methods
