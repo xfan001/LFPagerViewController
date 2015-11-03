@@ -90,18 +90,6 @@
             [self.barView setSelectedIndex:_selectedIndex];
         }];
     }
-//    NSInteger page = [objc_getAssociatedObject([self.pageViewController.viewControllers firstObject], UNIQUE_INDEX_KEY) integerValue];
-//    double offsetPercent = scrollView.contentOffset.x / self_width;
-//    if (scrollView.isDragging) {
-//        if (2>offsetPercent > 1.0) {
-//            NSInteger targetIndex = (_selectedIndex>=[self.datasource numberOfViewControllers]-1 ? _selectedIndex : _selectedIndex+1);
-//            [self.barView transitionFromIndex:_selectedIndex toIndex:targetIndex withPercent:offsetPercent-1];
-//        }
-//        if (0<offsetPercent < 1.0) {
-//            NSInteger targetIndex = (_selectedIndex<=0 ? _selectedIndex :_selectedIndex-1);
-//            [self.barView transitionFromIndex:_selectedIndex toIndex:targetIndex withPercent:1-offsetPercent];
-//        }
-//    }
 }
 
 #pragma mark - private methods

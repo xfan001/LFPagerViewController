@@ -109,22 +109,28 @@
     }
 }
 
-- (void)transitionFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex withPercent:(double)p
+- (void)reloadBarStyleAtPercent:(double)offsetPercent
 {
-    UILabel *fromLabel = self.labelArray[fromIndex];
-    UILabel *toLabel = self.labelArray[toIndex];
-    fromLabel.textColor = [LFBarScrollView getColorOfPercent:p between:self.titleNormalColor and:self.titleSelectedColor];
-    toLabel.textColor = [LFBarScrollView getColorOfPercent:1-p between:self.titleNormalColor and:self.titleSelectedColor];
+    NSInteger nextIndex = ceil(offsetPercent);
+    NSInteger previousIndex = floor(offsetPercent);
     
-    CGFloat startX1 = CGRectGetMinX(fromLabel.frame);
-    CGFloat startX2 = CGRectGetMinX(toLabel.frame);
-    CGFloat endX1 = CGRectGetMaxX(fromLabel.frame);
-    CGFloat endX2 = CGRectGetMaxX(toLabel.frame);
+    //text color transition
+    UILabel *nextLabel = self.labelArray[nextIndex];
+    UILabel *previousLabel = self.labelArray[previousIndex];
+    previousLabel.textColor = [LFBarScrollView getColorOfPercent:1-(offsetPercent-previousIndex) between:self.titleNormalColor and:self.titleSelectedColor];
+    nextLabel.textColor = [LFBarScrollView getColorOfPercent:1-(nextIndex-offsetPercent) between:self.titleNormalColor and:self.titleSelectedColor];
     
-    CGFloat start = startX1 + (startX2 - startX1) * p;
-    CGFloat end = endX1 + (endX2 - endX1) * p;
+    //slide view transition
+    CGFloat pStart = CGRectGetMinX(previousLabel.frame);
+    CGFloat pEnd = CGRectGetMaxX(previousLabel.frame);
+    CGFloat nStart = CGRectGetMinX(nextLabel.frame);
+    CGFloat nEnd = CGRectGetMaxX(nextLabel.frame);
     
+    CGFloat start = pStart + (offsetPercent-previousIndex) * (pEnd-pStart);
+    CGFloat end = nEnd - (nextIndex-offsetPercent) * (nEnd-nStart);
     self.slideView.frame = CGRectMake(start, self.slideView.frame.origin.y, end-start, self.slideView.frame.size.height);
+    
+    [self scrollToVisible];
 }
 
 #pragma mark - private functions
@@ -136,30 +142,16 @@
     CGFloat red2, green2, blue2, alpha2;
     [color2 getRed:&red2 green:&green2 blue:&blue2 alpha:&alpha2];
     
-    CGFloat p1 = percent;
-    CGFloat p2 = 1.0 - percent;
+    CGFloat p1 = 1.0 - percent;
+    CGFloat p2 = percent;
     UIColor *mid = [UIColor colorWithRed:red1*p1+red2*p2 green:green1*p1+green2*p2 blue:blue1*p1+blue2*p2 alpha:1.0f];
     return mid;
 }
 
-#pragma mark - getter and setter
-
-- (void)setSelectedIndex:(NSInteger)selectedIndex
+- (void)scrollToVisible
 {
-    UILabel *originLabel = self.labelArray[_selectedIndex];
-    originLabel.textColor = self.titleNormalColor;
+    CGRect frame = self.slideView.frame;
     
-    UILabel *label = self.labelArray[selectedIndex];
-    label.textColor = self.titleSelectedColor;
-    
-    _selectedIndex = selectedIndex;
-    
-    CGRect frame = label.frame;
-//    CGFloat width = [self.titleArray[_selectedIndex] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 2;
-    CGFloat width = frame.size.width;
-    self.slideView.frame = CGRectMake(CGRectGetMidX(frame)-width/2, CGRectGetHeight(self.frame)-self.slideHeight, width, self.slideHeight);
-    
-    //滚动到中间位置
     CGPoint offset = self.contentOffset;
     CGFloat maxOffset = self.contentSize.width - self_width;
     CGFloat minOffset = 0;
@@ -167,6 +159,30 @@
     offset.x = offset.x > minOffset ? offset.x : minOffset;
     offset.x = offset.x < maxOffset ? offset.x : maxOffset;
     self.contentOffset = offset;
+}
+
+
+#pragma mark - getter and setter
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex
+{
+    UILabel *originLabel = self.labelArray[_selectedIndex];
+    originLabel.textColor = self.titleNormalColor;
+    UILabel *label = self.labelArray[selectedIndex];
+    label.textColor = self.titleSelectedColor;
+    
+    _selectedIndex = selectedIndex;
+    
+    CGRect frame = label.frame;
+    CGFloat width;
+    if (self.slideLength == LFBarSlideLengthFit) {
+        width = [self.titleArray[_selectedIndex] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width;
+    }else{
+        width = frame.size.width;
+    }
+    self.slideView.frame = CGRectMake(CGRectGetMidX(frame)-width/2, CGRectGetHeight(self.frame)-self.slideHeight, width, self.slideHeight);
+    
+    [self scrollToVisible];
 }
 
 - (void)setTitleFont:(UIFont *)titleFont
@@ -220,6 +236,15 @@
         return;
     }
     _slideHeight = slideHeight;
+    [self reloadViews];
+}
+
+- (void)setSlideLength:(LFBarSlideLength)slideLength
+{
+    if (_slideLength == slideLength) {
+        return;
+    }
+    _slideLength = slideLength;
     [self reloadViews];
 }
 

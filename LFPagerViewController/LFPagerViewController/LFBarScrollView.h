@@ -7,6 +7,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, LFBarSlideLength) {
+    LFBarSlideLengthFit,
+    LFBarSlideLengthFull
+};
+
 @protocol LFBarScrollViewDelegate <NSObject>
 
 - (void)didClickBarAtIndex:(NSInteger)index;
@@ -32,6 +37,7 @@
 
 @property (nonatomic) CGFloat slideHeight;
 
+@property (nonatomic) LFBarSlideLength slideLength;
 
 - (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray;
 
@@ -40,6 +46,6 @@
 - (void)setSelectedIndex:(NSInteger)selectedIndex;
 
 /*渐变转换*/
-- (void)transitionFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex withPercent:(double)p;
+- (void)reloadBarStyleAtPercent:(double)offsetPercent;
 
 @end
