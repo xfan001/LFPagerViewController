@@ -97,45 +97,67 @@
     [self setSelectedIndex:_selectedIndex];
 }
 
-- (void)tapLabel:(id)sender
-{
-    UILabel *label = (UILabel *)[sender view];
+#pragma mark - API
 
-    [UIView animateWithDuration:0.3 animations:^{
-        self.selectedIndex = label.tag;
-    }];
-    if ([self.barDelegate respondsToSelector:@selector(didClickBarAtIndex:)]) {
-        [self.barDelegate didClickBarAtIndex:label.tag];
-    }
-}
-
-- (void)reloadBarStyleAtPercent:(double)offsetPercent
+/**
+ *  标题颜色随着位移比例渐变
+ *
+ *  @param offsetRatio 位移比例, 比如1.2,则前一个index是1,下一个index是2, 相对比例为0.2
+ */
+- (void)titleColorTransitionByPercent:(double)offsetRatio
 {
-    NSInteger nextIndex = ceil(offsetPercent);
-    NSInteger previousIndex = floor(offsetPercent);
-    
-    //text color transition
+    NSInteger nextIndex = ceil(offsetRatio);
+    NSInteger previousIndex = floor(offsetRatio);
     UILabel *nextLabel = self.labelArray[nextIndex];
     UILabel *previousLabel = self.labelArray[previousIndex];
-    previousLabel.textColor = [LFBarScrollView getColorOfPercent:1-(offsetPercent-previousIndex) between:self.titleNormalColor and:self.titleSelectedColor];
-    nextLabel.textColor = [LFBarScrollView getColorOfPercent:1-(nextIndex-offsetPercent) between:self.titleNormalColor and:self.titleSelectedColor];
     
-    //slide view transition
+    previousLabel.textColor = [self getColorOfPercent:1-(offsetRatio-previousIndex) between:self.titleNormalColor and:self.titleSelectedColor];
+    nextLabel.textColor = [self getColorOfPercent:1-(nextIndex-offsetRatio) between:self.titleNormalColor and:self.titleSelectedColor];
+}
+
+/**
+ *  滑块位置随着位移比例渐变
+ *
+ *  @param offsetRatio 同上
+ */
+- (void)slideTransitionByPercent:(double)offsetRatio
+{
+    NSInteger nextIndex = ceil(offsetRatio);
+    NSInteger previousIndex = floor(offsetRatio);
+    UILabel *nextLabel = self.labelArray[nextIndex];
+    UILabel *previousLabel = self.labelArray[previousIndex];
+    
     CGFloat pStart = CGRectGetMinX(previousLabel.frame);
     CGFloat pEnd = CGRectGetMaxX(previousLabel.frame);
     CGFloat nStart = CGRectGetMinX(nextLabel.frame);
     CGFloat nEnd = CGRectGetMaxX(nextLabel.frame);
     
-    CGFloat start = pStart + (offsetPercent-previousIndex) * (pEnd-pStart);
-    CGFloat end = nEnd - (nextIndex-offsetPercent) * (nEnd-nStart);
+    CGFloat start = pStart + (offsetRatio-previousIndex) * (pEnd-pStart);
+    CGFloat end = nEnd - (nextIndex-offsetRatio) * (nEnd-nStart);
     self.slideView.frame = CGRectMake(start, self.slideView.frame.origin.y, end-start, self.slideView.frame.size.height);
-    
-    [self scrollToVisible];
 }
+
+/**
+ *  使选中的label滑到中间
+ */
+- (void)scrollToVisible
+{
+    CGRect frame = [(UILabel *)[self.labelArray objectAtIndex:_selectedIndex] frame];
+    
+    CGPoint offset = self.contentOffset;
+    CGFloat maxOffset = self.contentSize.width - self_width;
+    CGFloat minOffset = 0;
+    offset.x = frame.origin.x + frame.size.width/2 - self_width/2;
+    offset.x = offset.x > minOffset ? offset.x : minOffset;
+    offset.x = offset.x < maxOffset ? offset.x : maxOffset;
+    self.contentOffset = offset;
+}
+
+
 
 #pragma mark - private functions
 
-+ (UIColor *)getColorOfPercent:(CGFloat)percent between:(UIColor *)color1 and:(UIColor *)color2{
+- (UIColor *)getColorOfPercent:(CGFloat)percent between:(UIColor *)color1 and:(UIColor *)color2{
     CGFloat red1, green1, blue1, alpha1;
     [color1 getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
     
@@ -148,19 +170,19 @@
     return mid;
 }
 
-- (void)scrollToVisible
-{
-    CGRect frame = self.slideView.frame;
-    
-    CGPoint offset = self.contentOffset;
-    CGFloat maxOffset = self.contentSize.width - self_width;
-    CGFloat minOffset = 0;
-    offset.x = frame.origin.x + frame.size.width/2 - self_width/2;
-    offset.x = offset.x > minOffset ? offset.x : minOffset;
-    offset.x = offset.x < maxOffset ? offset.x : maxOffset;
-    self.contentOffset = offset;
-}
+#pragma mark - selectors
 
+- (void)tapLabel:(id)sender
+{
+    UILabel *label = (UILabel *)[sender view];
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.selectedIndex = label.tag;
+    }];
+    if ([self.barDelegate respondsToSelector:@selector(didClickBarAtIndex:)]) {
+        [self.barDelegate didClickBarAtIndex:label.tag];
+    }
+}
 
 #pragma mark - getter and setter
 

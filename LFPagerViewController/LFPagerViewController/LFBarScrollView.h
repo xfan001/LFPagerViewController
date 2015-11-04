@@ -8,8 +8,8 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, LFBarSlideLength) {
-    LFBarSlideLengthFit,
-    LFBarSlideLengthFull
+    LFBarSlideLengthFull,
+    LFBarSlideLengthFit
 };
 
 @protocol LFBarScrollViewDelegate <NSObject>
@@ -46,6 +46,10 @@ typedef NS_ENUM(NSInteger, LFBarSlideLength) {
 - (void)setSelectedIndex:(NSInteger)selectedIndex;
 
 /*渐变转换*/
-- (void)reloadBarStyleAtPercent:(double)offsetPercent;
+- (void)titleColorTransitionByPercent:(double)offsetRatio;
+
+- (void)slideTransitionByPercent:(double)offsetRatio;
+
+- (void)scrollToVisible;
 
 @end

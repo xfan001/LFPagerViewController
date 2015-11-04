@@ -24,22 +24,16 @@
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
      
     NSMutableArray *titleArray = [[NSMutableArray alloc] init];
     for (int i=0; i<[self.datasource numberOfViewControllers];i++) {
         [titleArray addObject:[self.datasource titleAtIndex:i]];
     }
     self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, [self barViewHeight]) titles:titleArray];
-    [self.barView setSelectedIndex:_selectedIndex];
     self.barView.barDelegate = self;
     [self.view addSubview:self.barView];
     
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    self.pageViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.barView.frame), self_width, self_height-CGRectGetHeight(self.barView.frame));
     self.pageViewController.dataSource = self;
     self.pageViewController.delegate = self;
     for (UIView *view in [[[self pageViewController] view] subviews]) {
@@ -52,6 +46,18 @@
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //set frame
+    self.barView.frame = CGRectMake(0, 0, self_width, [self barViewHeight]);
+    self.pageViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.barView.frame), self_width, self_height-CGRectGetHeight(self.barView.frame));
+    
+    //设置默认的index
+    [self.barView setSelectedIndex:_selectedIndex];
     [self.pageViewController setViewControllers:[NSArray arrayWithObject:[self viewControllerOfIndex:_selectedIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 

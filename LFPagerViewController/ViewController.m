@@ -15,17 +15,25 @@
 
 @implementation ViewController
 
+- (instancetype)init{
+    if (self = [super init]) {
+        self.datasource = self;
+        self.delegate = self;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.datasource = self;
-    self.delegate = self;
     // Do any additional setup after loading the view, typically from a nib.
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
     for (int i=0; i<[self numberOfViewControllers]; i++) {
-        [self.barView setWidth:mainScreenWidth/5 forIndex:i];
+        [self.barView setWidth:mainScreenWidth/2 forIndex:i];
     }
+    [self.barView setSlideLength:LFBarSlideLengthFit];
+    [self setSelectedIndex:1];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -38,7 +46,7 @@
 
 - (NSInteger)numberOfViewControllers
 {
-    return 10;
+    return 20;
 }
 
 - (CGFloat)barHeight{
