@@ -20,10 +20,17 @@
 
 @implementation LFPagerViewController
 
+- (void)initDatasourceAndDelegate
+{
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    [self initDatasourceAndDelegate];
      
     NSMutableArray *titleArray = [[NSMutableArray alloc] init];
     for (int i=0; i<[self.datasource numberOfViewControllers];i++) {

@@ -34,6 +34,8 @@
 @property (nonatomic, weak) id <LFPagerViewControllerDataSource> datasource;
 @property (nonatomic, weak) id <LFPagerViewControllerDelegate> delegate;
 
+- (void)initDatasourceAndDelegate;
+
 @property (assign, nonatomic) NSInteger selectedIndex;
 
 @end

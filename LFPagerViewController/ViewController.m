@@ -17,10 +17,16 @@
 
 - (instancetype)init{
     if (self = [super init]) {
-        self.datasource = self;
-        self.delegate = self;
     }
     return self;
+}
+
+- (void)initDatasourceAndDelegate
+{
+    [super initDatasourceAndDelegate];
+    
+    self.datasource = self;
+    self.delegate = self;
 }
 
 - (void)viewDidLoad {
