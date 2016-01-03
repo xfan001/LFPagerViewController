@@ -20,26 +20,18 @@
 
 @implementation LFPagerViewController
 
-- (void)initDatasourceAndDelegate
-{
-    
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    [self initDatasourceAndDelegate];
-     
-    NSMutableArray *titleArray = [[NSMutableArray alloc] init];
-    for (int i=0; i<[self.datasource numberOfViewControllers];i++) {
-        [titleArray addObject:[self.datasource titleAtIndex:i]];
-    }
-    self.barView = [[LFBarScrollView alloc] initWithFrame:CGRectMake(0, 0, self_width, [self barViewHeight]) titles:titleArray];
+    //add barView
+    self.barView = [[LFBarScrollView alloc] init];
     self.barView.barDelegate = self;
     [self.view addSubview:self.barView];
     
+    //add pageViewController
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageViewController.dataSource = self;
     self.pageViewController.delegate = self;
@@ -48,22 +40,30 @@
             [(UIScrollView *)view setDelegate:self];
         }
     }
-    
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
+    //add titles
+    NSMutableArray *titles = [NSMutableArray new];
+    for (int i=0; i<[self numberOfViewControllers]; i++) {
+        [titles addObject:[self titleAtIndex:i]];
+    }
+    [self.barView setTitles:titles];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    self.barView.frame = CGRectMake(0, 0, self_width, [self barHeight]);
+    self.pageViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.barView.frame), self_width, self_height-CGRectGetHeight(self.barView.frame));
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    //set frame
-    self.barView.frame = CGRectMake(0, 0, self_width, [self barViewHeight]);
-    self.pageViewController.view.frame = CGRectMake(0, CGRectGetMaxY(self.barView.frame), self_width, self_height-CGRectGetHeight(self.barView.frame));
-    
-    //设置默认的index
     [self.barView setSelectedIndex:_selectedIndex];
     [self.pageViewController setViewControllers:[NSArray arrayWithObject:[self viewControllerOfIndex:_selectedIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
@@ -77,19 +77,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     NSUInteger pageIndex = [objc_getAssociatedObject(viewController, UNIQUE_INDEX_KEY) integerValue];
-    return pageIndex < [self.datasource numberOfViewControllers]-1 ? [self viewControllerOfIndex:pageIndex+1]: nil;
-}
-
-#pragma mark - Page View Delegate
-
-- (void)pageViewController:(UIPageViewController * _Nonnull)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> * _Nonnull)pendingViewControllers
-{
-    
-}
-
-- (void)pageViewController:(UIPageViewController * _Nonnull)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> * _Nonnull)previousViewControllers transitionCompleted:(BOOL)completed
-{
-
+    return pageIndex < [self numberOfViewControllers]-1 ? [self viewControllerOfIndex:pageIndex+1]: nil;
 }
 
 #pragma mark - UIscrollView delegate
@@ -105,7 +93,7 @@
     }
 }
 
-#pragma mark - private methods
+#pragma mark - barView delegate
 
 - (void)didClickBarAtIndex:(NSInteger)index
 {
@@ -115,23 +103,40 @@
                                      completion:nil];
 }
 
+#pragma mark - utils
 
 - (UIViewController *)viewControllerOfIndex:(NSInteger)index
 {
-    UIViewController *vc = [self.datasource viewControllerAtIndex:index];
+    UIViewController *vc = [self viewControllerAtIndex:index];
     objc_setAssociatedObject(vc, UNIQUE_INDEX_KEY, [NSNumber numberWithInteger:index], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return vc;
 }
 
-- (CGFloat)barViewHeight
+
+#pragma mark - public method(to be overrided)
+
+- (CGFloat)barHeight
 {
-    if (self.datasource && [self.datasource respondsToSelector:@selector(barHeight)]) {
-        return [self.delegate barHeight];
-    }
-    return 36.0f;
+    return CGFLOAT_MIN;
 }
 
-#pragma mark - getter and setter
+- (NSInteger)numberOfViewControllers
+{
+    return 0;
+}
+
+- (NSString *)titleAtIndex:(NSInteger)index
+{
+    return nil;
+}
+
+- (UIViewController *)viewControllerAtIndex:(NSInteger)index
+{
+    return nil;
+}
+
+
+
 
 
 @end

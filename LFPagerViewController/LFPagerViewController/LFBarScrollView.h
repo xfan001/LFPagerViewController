@@ -12,11 +12,13 @@ typedef NS_ENUM(NSInteger, LFBarSlideLength) {
     LFBarSlideLengthFit
 };
 
+
 @protocol LFBarScrollViewDelegate <NSObject>
 
 - (void)didClickBarAtIndex:(NSInteger)index;
 
 @end
+
 
 @interface LFBarScrollView : UIScrollView
 
@@ -26,30 +28,24 @@ typedef NS_ENUM(NSInteger, LFBarSlideLength) {
  *  自定义外观属性
  */
 @property (nonatomic, strong) UIFont *titleFont;
-
 @property (nonatomic, strong) UIColor *titleNormalColor;
-
 @property (nonatomic, strong) UIColor *titleSelectedColor;
-
-@property (nonatomic, strong) UIColor *barBackgroundColor;
-
 @property (nonatomic, strong) UIColor *slideColor;
-
 @property (nonatomic) CGFloat slideHeight;
-
 @property (nonatomic) LFBarSlideLength slideLength;
 
-- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray;
+//必需设置
+- (void)setTitles:(NSArray *)titles;
 
-- (void)setWidth:(CGFloat)width forIndex:(NSInteger)index;
+- (void)setWidthArray:(NSArray *)widthArray;
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex;
 
 /*渐变转换*/
-- (void)titleColorTransitionByPercent:(double)offsetRatio;
+//- (void)titleColorTransitionByPercent:(double)offsetRatio;
 
-- (void)slideTransitionByPercent:(double)offsetRatio;
+//- (void)slideTransitionByPercent:(double)offsetRatio;
 
-- (void)scrollToVisible;
+//- (void)scrollToVisible;
 
 @end

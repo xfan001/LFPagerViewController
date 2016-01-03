@@ -14,8 +14,9 @@
 
 @interface LFBarScrollView ()
 
-@property (nonatomic, strong) NSArray *titleArray;
-@property (nonatomic, copy) NSMutableArray *widthArray;
+@property (nonatomic, strong) NSArray *titles;
+@property (nonatomic, strong) NSArray *widthArray;
+
 @property (nonatomic, strong) NSArray *labelArray;
 
 @property (nonatomic, strong) UIView *slideView;
@@ -26,36 +27,15 @@
 
 @implementation LFBarScrollView
 
-- (instancetype)initWithFrame:(CGRect)frame titles:(NSArray *)titleArray
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         
         _titleFont = [UIFont systemFontOfSize:14];
-        _barBackgroundColor = [UIColor whiteColor];
         _titleNormalColor = [UIColor blackColor];
         _titleSelectedColor = [UIColor redColor];
         _slideColor = [UIColor redColor];
         _slideHeight = 2;
-        
-        _titleArray = titleArray;
-    
-        NSMutableArray *labelMutableArray = [NSMutableArray new];
-        NSMutableArray *widthMutableArray = [NSMutableArray new];
-        for (int i=0; i<self.titleArray.count; i++) {
-            UILabel *label = [[UILabel alloc] init];
-            label.text = self.titleArray[i];
-            CGFloat width = [[_titleArray objectAtIndex:i] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width + 30;
-            [widthMutableArray addObject:[NSNumber numberWithFloat:width]];
-            
-            label.tag = i;
-            label.userInteractionEnabled = YES;
-            [label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)]];
-            [self addSubview:label];
-            
-            [labelMutableArray addObject:label];
-        }
-        _labelArray = labelMutableArray;
-        _widthArray = widthMutableArray;
         
         self.slideView = [[UIView alloc] init];
         [self addSubview:self.slideView];
@@ -63,37 +43,35 @@
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.bounces = NO;
-        
-        [self reloadViews];
     }
     return self;
 }
 
 - (void)reloadViews
 {
-    self.backgroundColor = self.barBackgroundColor;
-    
     CGFloat x = 0;
-    for (int i=0; i<self.titleArray.count; i++){
+    for (int i=0; i<self.labelArray.count; i++){
         UILabel *label = [self.labelArray objectAtIndex:i];
         label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [UIColor clearColor];
         label.font = self.titleFont;
         label.textColor = self.titleNormalColor;
-        label.backgroundColor = self.backgroundColor;
+        label.highlightedTextColor = self.titleSelectedColor;
         
-        CGFloat width = [self.widthArray[i] doubleValue];
+        CGFloat width;
+        if (self.widthArray && i < self.widthArray.count) {
+            width = [self.widthArray[i] doubleValue];
+        }else{
+            width = [label.text sizeWithAttributes:@{NSFontAttributeName:self.titleFont}].width + 20;
+        }
         label.frame = CGRectMake(x, 0, width, self.bounds.size.height);
         x += width;
     }
-    
     self.contentSize = CGSizeMake(x, self.bounds.size.height);
     
-    self.slideView.frame = ({
-        CGRect frame = self.slideView.frame;
-        frame.size.height = self.slideHeight;
-        frame;
-    });
     self.slideView.backgroundColor = self.slideColor;
+    [self bringSubviewToFront:self.slideView];
+    
     [self setSelectedIndex:_selectedIndex];
 }
 
@@ -188,23 +166,61 @@
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex
 {
-    UILabel *originLabel = self.labelArray[_selectedIndex];
-    originLabel.textColor = self.titleNormalColor;
-    UILabel *label = self.labelArray[selectedIndex];
-    label.textColor = self.titleSelectedColor;
-    
     _selectedIndex = selectedIndex;
     
-    CGRect frame = label.frame;
-    CGFloat width;
-    if (self.slideLength == LFBarSlideLengthFit) {
-        width = [self.titleArray[_selectedIndex] sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width;
-    }else{
-        width = frame.size.width;
+    for (int i=0; i<self.labelArray.count; i++) {
+        [(UILabel *)self.labelArray[i] setHighlighted:(_selectedIndex==i)];
     }
-    self.slideView.frame = CGRectMake(CGRectGetMidX(frame)-width/2, CGRectGetHeight(self.frame)-self.slideHeight, width, self.slideHeight);
+    
+    UILabel *label = self.labelArray[_selectedIndex];
+    CGRect labelFrame = [label frame];
+    CGFloat width;
+    if (self.slideLength == LFBarSlideLengthFull) {
+        width = CGRectGetWidth(labelFrame);
+    }else{
+        width = [label.text sizeWithAttributes:@{NSFontAttributeName : self.titleFont}].width;
+    }
+    self.slideView.frame = CGRectMake(CGRectGetMidX(labelFrame)-width/2, CGRectGetHeight(self.bounds)-self.slideHeight, width, self.slideHeight);
     
     [self scrollToVisible];
+}
+
+
+
+- (void)setTitles:(NSArray *)titles
+{
+    if ([_titles isEqualToArray:titles]) {
+        return;
+    }
+    _titles = titles;
+    
+    for (UILabel *view in _labelArray) {
+        [view removeFromSuperview];
+    }
+    
+    NSMutableArray *labels = [NSMutableArray arrayWithCapacity:titles.count];
+    for (int i=0; i<titles.count; i++) {
+        UILabel *label = [[UILabel alloc] init];
+        label.text = titles[i];
+        
+        label.tag = i;
+        label.userInteractionEnabled = YES;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)]];
+        [self addSubview:label];
+        [labels addObject:label];
+    }
+    _labelArray = labels;
+
+    [self reloadViews];
+}
+
+- (void)setWidthArray:(NSArray *)widthArray
+{
+    if ([_widthArray isEqualToArray:widthArray]) {
+        return;
+    }
+    _widthArray = widthArray;
+    [self reloadViews];
 }
 
 - (void)setTitleFont:(UIFont *)titleFont
@@ -231,15 +247,6 @@
         return;
     }
     _titleSelectedColor = titleSelectedColor;
-    [self reloadViews];
-}
-
-- (void)setBarBackgroundColor:(UIColor *)barBackgroundColor
-{
-    if ([_barBackgroundColor isEqual:barBackgroundColor]) {
-        return;
-    }
-    _barBackgroundColor = barBackgroundColor;
     [self reloadViews];
 }
 
@@ -270,9 +277,9 @@
     [self reloadViews];
 }
 
-- (void)setWidth:(CGFloat)width forIndex:(NSInteger)index
+- (void)setFrame:(CGRect)frame
 {
-    [_widthArray setObject:[NSNumber numberWithFloat:width] atIndexedSubscript:index];
+    [super setFrame:frame];
     [self reloadViews];
 }
 

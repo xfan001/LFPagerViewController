@@ -9,25 +9,12 @@
 #import "ViewController.h"
 #define mainScreenWidth ([UIScreen mainScreen].bounds.size.width)
 
-@interface ViewController () <LFPagerViewControllerDataSource, LFPagerViewControllerDelegate>
+@interface ViewController ()
 
 @end
 
 @implementation ViewController
 
-- (instancetype)init{
-    if (self = [super init]) {
-    }
-    return self;
-}
-
-- (void)initDatasourceAndDelegate
-{
-    [super initDatasourceAndDelegate];
-    
-    self.datasource = self;
-    self.delegate = self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,18 +22,26 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    for (int i=0; i<[self numberOfViewControllers]; i++) {
-        [self.barView setWidth:mainScreenWidth/2 forIndex:i];
-    }
+    /*
+    self.barView.titleFont = [UIFont systemFontOfSize:15];
+    self.barView.titleNormalColor = [UIColor lightGrayColor];
+    self.barView.titleSelectedColor = [UIColor orangeColor];
+    self.barView.slideColor = [UIColor redColor];
+    self.barView.slideHeight = 4;
     [self.barView setSlideLength:LFBarSlideLengthFit];
+    NSMutableArray *widthArray = [NSMutableArray new];
+    for (int i=0; i<[self numberOfViewControllers]; i++) {
+        [widthArray addObject:@(mainScreenWidth/3)];
+    }
+    [self.barView setWidthArray:widthArray];
     [self setSelectedIndex:1];
+     */
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    NSLog(@"%@", NSStringFromCGSize(self.barView.contentSize));
 }
 
 
@@ -55,7 +50,8 @@
     return 20;
 }
 
-- (CGFloat)barHeight{
+- (CGFloat)barHeight
+{
     return 36;
 }
 
