@@ -6,7 +6,7 @@
 
 #使用方法
 
-直接集成LFPagerViewController并override以下几个方法:
+直接继承LFPagerViewController并override以下几个方法:
 * - (NSInteger)numberOfViewControllers;
 * - (NSString *)titleAtIndex:(NSInteger)index;
 * - (UIViewController *)viewControllerAtIndex:(NSInteger)index;
