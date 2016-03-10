@@ -14,10 +14,10 @@
 
 @interface LFBarScrollView ()
 
-@property (nonatomic, strong) NSArray *titles;
-@property (nonatomic, strong) NSArray *widthArray;
+@property (nonatomic, copy) NSArray *titles;
+@property (nonatomic, copy) NSArray *widthArray;
 
-@property (nonatomic, strong) NSArray *labelArray;
+@property (nonatomic, copy) NSArray *labelArray;
 
 @property (nonatomic, strong) UIView *slideView;
 
